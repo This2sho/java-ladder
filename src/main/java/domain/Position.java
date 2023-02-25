@@ -22,16 +22,8 @@ public class Position {
         return new Position(value - 1);
     }
 
-    public Position minus(Position position) {
-        return new Position(value - position.value);
-    }
-
     public Position plus() {
         return new Position(value + 1);
-    }
-
-    public Position plus(Position position) {
-        return new Position(value + position.value);
     }
 
     @Override

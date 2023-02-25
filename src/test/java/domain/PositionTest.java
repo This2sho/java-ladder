@@ -21,7 +21,8 @@ class PositionTest {
     @DisplayName("Position 일치 테스트")
     void positionValidTest() {
         Position position = new Position(0);
-        position = position.plus(new Position(2));
+        position = position.plus();
+        position = position.plus();
         position = position.minus();
         assertThat(position).isEqualTo(new Position(1));
     }
