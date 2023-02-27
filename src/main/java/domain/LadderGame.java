@@ -1,6 +1,5 @@
 package domain;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,14 +29,14 @@ public class LadderGame {
         }
     }
 
-    public Map<String, String> getResult() {
+    public LadderResult getResult() {
         Map<String, String> map = new LinkedHashMap<>();
         this.people.getPeople()
             .forEach((p) -> {
                 String prize = searchPrizeByPerson(p);
                 map.put(p.getName(), prize);
             });
-        return Collections.unmodifiableMap(map);
+        return new LadderResult(map);
     }
 
     private String searchPrizeByPerson(Person person) {

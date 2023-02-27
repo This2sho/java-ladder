@@ -1,12 +1,11 @@
 package view;
 
 import domain.Ladder;
+import domain.LadderResult;
 import domain.Line;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public class OutputView {
 
@@ -42,15 +41,18 @@ public class OutputView {
         System.out.println(exception.getMessage());
     }
 
-    public static void printResult(Map<String, String> ladderResult, String personName) {
+    public static void printResult(LadderResult ladderResult, String personName) {
         System.out.println("실행결과");
         if (FIND_ALL_COMMAND.equals(personName)) {
-            Set<Entry<String, String>> entries = ladderResult.entrySet();
-            for (Entry<String, String> entry : entries) {
-                System.out.printf("%s : %s%n", entry.getKey(), entry.getValue());
-            }
+            printMatchingResult(ladderResult);
             return;
         }
-        System.out.println(ladderResult.get(personName));
+        System.out.println(ladderResult.findPrize(personName));
+    }
+
+    private static void printMatchingResult(LadderResult ladderResult) {
+        for (Entry<String, String> entry : ladderResult) {
+            System.out.printf("%s : %s%n", entry.getKey(), entry.getValue());
+        }
     }
 }

@@ -2,13 +2,13 @@ import static view.InputView.DELIMITER;
 
 import domain.Ladder;
 import domain.LadderGame;
+import domain.LadderResult;
 import domain.People;
 import domain.Person;
 import domain.Prizes;
 import domain.RandomLadderGenerator;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -16,6 +16,11 @@ import view.InputView;
 import view.OutputView;
 
 public class Application {
+
+    public static void main(String[] args) {
+        Application application = new Application();
+        application.run();
+    }
 
     public void run() {
         People people = repeat(this::nameRequest);
@@ -76,13 +81,8 @@ public class Application {
     }
 
     private void showResult(LadderGame ladderGame) {
-        String personName = repeat(InputView::readPersonName);
-        Map<String, String> result = ladderGame.getResult();
+        String personName = InputView.readPersonName();
+        LadderResult result = ladderGame.getResult();
         OutputView.printResult(result, personName);
-    }
-
-    public static void main(String[] args) {
-        Application application = new Application();
-        application.run();
     }
 }
