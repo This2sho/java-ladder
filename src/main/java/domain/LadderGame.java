@@ -1,11 +1,10 @@
 package domain;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class LadderGame {
-
-    private final static String ALL = "all";
 
     private final People people;
     private final Prizes prizes;
@@ -31,27 +30,19 @@ public class LadderGame {
         }
     }
 
-    public LadderResults searchResult(String personName) {
-        if (ALL.equals(personName)) {
-            return searchAllResult();
-        }
-        return searchOne(personName);
+    public Map<String, String> getResult() {
+        Map<String, String> map = new LinkedHashMap<>();
+        this.people.getPeople()
+            .forEach((p) -> {
+                String prize = searchPrizeByPerson(p);
+                map.put(p.getName(), prize);
+            });
+        return Collections.unmodifiableMap(map);
     }
 
-    private LadderResults searchAllResult() {
-        List<Person> people = this.people.getPeople();
-        List<LadderResult> ladderResults = people.stream()
-            .map((p) -> new LadderResult(p, prizes.getPrize(p.getPosition().getValue())))
-            .collect(Collectors.toUnmodifiableList());
-        return new LadderResults(ladderResults);
-    }
-
-    private LadderResults searchOne(String personName) {
-        Person person = people.searchByName(personName);
+    private String searchPrizeByPerson(Person person) {
         int personIndex = person.getPosition()
             .getValue();
-        String prize = prizes.getPrize(personIndex);
-        List<LadderResult> ladderResults = List.of(new LadderResult(person, prize));
-        return new LadderResults(ladderResults);
+        return prizes.getPrize(personIndex);
     }
 }

@@ -1,15 +1,17 @@
 package view;
 
 import domain.Ladder;
-import domain.LadderResult;
-import domain.LadderResults;
 import domain.Line;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class OutputView {
 
     public static final String DELIMITER = "|";
+    public static final String FIND_ALL_COMMAND = "all";
 
     public void printNames(List<String> names) {
         names.forEach((name) -> System.out.printf("%5s ", name));
@@ -40,20 +42,15 @@ public class OutputView {
         System.out.println(exception.getMessage());
     }
 
-    public void printResult(LadderResults ladderResults) {
+    public void printResult2(Map<String, String> ladderResult, String personName) {
         System.out.println("실행결과");
-        if (ladderResults.isSingleResult()) {
-            printSingleResult(ladderResults);
+        if (FIND_ALL_COMMAND.equals(personName)) {
+            Set<Entry<String, String>> entries = ladderResult.entrySet();
+            for (Entry<String, String> entry : entries) {
+                System.out.printf("%s : %s%n", entry.getKey(), entry.getValue());
+            }
             return;
         }
-        for (LadderResult ladderResult : ladderResults) {
-            System.out.printf("%s : %s%n", ladderResult.getPersonName(),
-                ladderResult.getPrize());
-        }
-    }
-
-    private void printSingleResult(LadderResults ladderResults) {
-        LadderResult singleResult = ladderResults.getSingleResult();
-        System.out.println(singleResult.getPrize());
+        System.out.println(ladderResult.get(personName));
     }
 }

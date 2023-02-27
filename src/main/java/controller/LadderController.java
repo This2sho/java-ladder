@@ -4,13 +4,13 @@ import static view.InputView.DELIMITER;
 
 import domain.Ladder;
 import domain.LadderGame;
-import domain.LadderResults;
 import domain.People;
 import domain.Person;
 import domain.Prizes;
 import domain.RandomLadderGenerator;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -86,12 +86,8 @@ public class LadderController {
     }
 
     private void showResult(LadderGame ladderGame) {
-        LadderResults result = repeat(() -> getLadderResults(ladderGame));
-        outputView.printResult(result);
-    }
-
-    private LadderResults getLadderResults(LadderGame ladderGame) {
         String personName = repeat(inputView::readPersonName);
-        return ladderGame.searchResult(personName);
+        Map<String, String> result = ladderGame.getResult();
+        outputView.printResult2(result, personName);
     }
 }
