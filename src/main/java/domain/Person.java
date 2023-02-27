@@ -31,21 +31,7 @@ public class Person {
     }
 
     public void move(ShiftType shiftType) {
-        if (ShiftType.LEFT.equals(shiftType)) {
-            moveLeft();
-            return;
-        }
-        if (ShiftType.RIGHT.equals(shiftType)) {
-            moveRight();
-        }
-    }
-
-    private void moveLeft() {
-        position = position.minus();
-    }
-
-    private void moveRight() {
-        position = position.plus();
+        position = shiftType.apply(position);
     }
 
     public Position getPosition() {
