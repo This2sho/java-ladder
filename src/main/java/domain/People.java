@@ -1,6 +1,6 @@
 package domain;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +47,7 @@ public class People {
     }
 
     public List<Person> getPeople() {
-        return new ArrayList<>(people);
+        return Collections.unmodifiableList(people);
     }
 
     public Person searchByName(String name) {
