@@ -1,9 +1,88 @@
-import controller.LadderController;
+import static view.InputView.DELIMITER;
+
+import domain.Ladder;
+import domain.LadderGame;
+import domain.People;
+import domain.Person;
+import domain.Prizes;
+import domain.RandomLadderGenerator;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import view.InputView;
+import view.OutputView;
 
 public class Application {
 
+    public void run() {
+        People people = repeat(this::nameRequest);
+        Prizes prizes = repeat(() -> prizesRequest(people.getCount()));
+        Ladder ladder = repeat(() -> ladderRequest(people.getCount()));
+        LadderGame ladderGame = new LadderGame(people, prizes, ladder);
+
+        showGameStatus(people, prizes, ladder);
+        ladderGame.start();
+        showResult(ladderGame);
+    }
+
+    private <T> T repeat(Supplier<T> inputReader) {
+        try {
+            return inputReader.get();
+        } catch (IllegalArgumentException exception) {
+            OutputView.printError(exception);
+            return repeat(inputReader);
+        } catch (Exception exception) {
+            OutputView.printCriticalError(exception);
+            return repeat(inputReader);
+        }
+    }
+
+    private People nameRequest() {
+        String inputNames = InputView.readNames();
+
+        List<String> names = convertToList(inputNames);
+
+        AtomicInteger index = new AtomicInteger();
+        List<Person> people = names.stream()
+            .map((name) -> new Person(name, index.getAndIncrement()))
+            .collect(Collectors.toList());
+        return new People(people);
+    }
+
+    private List<String> convertToList(String inputs) {
+        return Arrays.stream(inputs.split(DELIMITER))
+            .collect(Collectors.toList());
+    }
+
+    private Prizes prizesRequest(int peopleCount) {
+        String inputPrizes = InputView.readResults();
+
+        List<String> prizes = convertToList(inputPrizes);
+        return new Prizes(prizes, peopleCount);
+    }
+
+    private Ladder ladderRequest(int peopleCount) {
+        int height = InputView.readLadderHeight();
+        return Ladder.make(peopleCount, height, new RandomLadderGenerator());
+    }
+
+    private void showGameStatus(People people, Prizes prizes, Ladder ladder) {
+        OutputView.printNames(people.getNames());
+        OutputView.printLadder(ladder);
+        OutputView.printNames(prizes.getPrizes());
+    }
+
+    private void showResult(LadderGame ladderGame) {
+        String personName = repeat(InputView::readPersonName);
+        Map<String, String> result = ladderGame.getResult();
+        OutputView.printResult(result, personName);
+    }
+
     public static void main(String[] args) {
-        LadderController ladderController = new LadderController();
-        ladderController.run();
+        Application application = new Application();
+        application.run();
     }
 }
