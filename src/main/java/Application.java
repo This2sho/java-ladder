@@ -30,7 +30,8 @@ public class Application {
 
         showGameStatus(people, prizes, ladder);
         ladderGame.start();
-        showResult(ladderGame);
+        LadderResult result = ladderGame.getResult();
+        repeat(() -> showResult(result));
     }
 
     private <T> T repeat(Supplier<T> inputReader) {
@@ -42,6 +43,18 @@ public class Application {
         } catch (Exception exception) {
             OutputView.printCriticalError(exception);
             return repeat(inputReader);
+        }
+    }
+
+    private void repeat(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (IllegalArgumentException exception) {
+            OutputView.printError(exception);
+            repeat(runnable);
+        } catch (Exception exception) {
+            OutputView.printCriticalError(exception);
+            repeat(runnable);
         }
     }
 
@@ -80,9 +93,8 @@ public class Application {
         OutputView.printNames(prizes.getPrizes());
     }
 
-    private void showResult(LadderGame ladderGame) {
+    private void showResult(LadderResult result) {
         String personName = InputView.readPersonName();
-        LadderResult result = ladderGame.getResult();
         OutputView.printResult(result, personName);
     }
 }
